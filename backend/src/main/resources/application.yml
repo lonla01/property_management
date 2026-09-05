@@ -1,0 +1,69 @@
+server:
+  port: ${PORT:8080}
+
+spring:
+  application:
+    name: rental-management
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/rental_management}
+    username: ${DATABASE_USERNAME:postgres}
+    password: ${DATABASE_PASSWORD:postgres}
+  jpa:
+    hibernate:
+      ddl-auto: ${DDL_AUTO:update}
+    show-sql: ${SHOW_SQL:false}
+    properties:
+      hibernate:
+        format_sql: true
+    open-in-view: false
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+app:
+  jwt:
+    # Ne jamais coder cette clé en dur en production — fournir JWT_SECRET via variable d'environnement.
+    secret: ${JWT_SECRET:changeme-dev-only-secret-key-please-override-in-env-min-32-chars}
+    expiration-ms: ${JWT_EXPIRATION_MS:86400000} # 24h
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173}
+
+  cinetpay:
+    api-key: ${CINETPAY_API_KEY:}
+    site-id: ${CINETPAY_SITE_ID:}
+    sandbox: ${CINETPAY_SANDBOX:true}
+    base-url: ${CINETPAY_BASE_URL:https://api-checkout.cinetpay.com/v2}
+    notify-url: ${CINETPAY_NOTIFY_URL:http://localhost:8080/api/webhooks/cinetpay}
+    return-url: ${CINETPAY_RETURN_URL:http://localhost:5173/paiement/confirmation}
+
+  notification:
+    # Fournisseur actif pour SMS/WhatsApp: "simulated" (par défaut) ou "twilio" une fois les comptes créés.
+    provider: ${NOTIFICATION_PROVIDER:simulated}
+    twilio:
+      account-sid: ${TWILIO_ACCOUNT_SID:}
+      auth-token: ${TWILIO_AUTH_TOKEN:}
+      whatsapp-from: ${TWILIO_WHATSAPP_FROM:}
+      sms-from: ${TWILIO_SMS_FROM:}
+
+  reminders:
+    batch-size: ${REMINDER_BATCH_SIZE:25}
+    batch-pause-ms: ${REMINDER_BATCH_PAUSE_MS:2000}
+    days-before-due: ${REMINDER_DAYS_BEFORE_DUE:5,1}
+    overdue-cadence-days: ${OVERDUE_CADENCE_DAYS:1,3,7}
+
+  frontend:
+    base-url: ${FRONTEND_BASE_URL:http://localhost:5173}
+
+  receipts:
+    dossier: ${RECEIPTS_DIR:/tmp/receipts}
+
+  scheduler:
+    # Clé partagée à fournir dans le header X-Scheduler-Key par le worker/cron externe
+    # (Railway) qui appelle /api/rappels/executer-du-jour. Générer une valeur forte et
+    # aléatoire en production — ne jamais laisser vide.
+    key: ${SCHEDULER_KEY:}
+
+logging:
+  level:
+    com.rental.management: ${LOG_LEVEL:INFO}
