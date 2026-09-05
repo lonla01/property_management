@@ -40,6 +40,9 @@ public class CinetPayClient {
 
     private final WebClient webClient = WebClient.builder().build();
 
+    public boolean isSandbox() {
+        return sandbox;
+    }   
     @Data
     public static class InitiationResultat {
         private boolean succes;

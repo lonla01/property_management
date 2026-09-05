@@ -71,6 +71,13 @@ public class PaiementService {
             return new LienPaiementResponse(paiement.getId(), null, "ECHOUE: " + resultat.getMessage());
         }
 
+        // En sandbox, aucun vrai CinetPay n'appellera jamais notre webhook — on confirme donc
+        // immédiatement le paiement pour permettre de tester tout le flux (reçu PDF inclus)
+        // sans dépendance externe. En production (sandbox=false), on attend le vrai webhook.
+        if (cinetPayClient.isSandbox()) {
+            confirmerPaiement(paiement, "ORANGE_MONEY");
+        }
+
         // Le lien renvoyé au locataire passe par notre propre page (token), qui redirige ensuite
         // vers la page de paiement CinetPay — ça permet de suivre le paiement même en cas de coupure.
         String urlPublique = frontendBaseUrl + "/paiement/" + token;
@@ -100,6 +107,10 @@ public class PaiementService {
             return;
         }
 
+        confirmerPaiement(paiement, modePaiementBrut);
+    }
+
+    private void confirmerPaiement(Paiement paiement, String modePaiementBrut) {
         paiement.setStatut(StatutPaiement.REUSSI);
         paiement.setDatePaiement(Instant.now());
         paiement.setMode(mapperMode(modePaiementBrut));
