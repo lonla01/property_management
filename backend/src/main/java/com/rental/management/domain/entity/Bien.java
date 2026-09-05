@@ -1,5 +1,6 @@
 package com.rental.management.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rental.management.domain.enums.TypeBien;
 import jakarta.persistence.*;
 import lombok.*;
@@ -31,6 +32,7 @@ public class Bien {
     @JoinColumn(name = "proprietaire_id", nullable = false)
     private Proprietaire proprietaire;
 
+    @JsonIgnore
     @Builder.Default
     @OneToMany(mappedBy = "bien", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Unite> unites = new ArrayList<>();

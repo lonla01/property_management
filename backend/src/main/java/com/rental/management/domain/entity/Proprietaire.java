@@ -1,5 +1,6 @@
 package com.rental.management.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rental.management.domain.enums.*;
 import jakarta.persistence.*;
 import lombok.*;
@@ -30,9 +31,11 @@ public class Proprietaire {
     @Column(nullable = false)
     private String telephone;
 
+    @JsonIgnore
     @Column(nullable = false)
     private String motDePasseHash;
 
+    @JsonIgnore
     @Builder.Default
     @OneToMany(mappedBy = "proprietaire", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Bien> biens = new ArrayList<>();

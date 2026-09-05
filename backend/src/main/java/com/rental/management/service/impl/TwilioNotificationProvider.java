@@ -4,8 +4,8 @@ import com.rental.management.service.NotificationProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.LinkedMultiValueMap;
-import java.util.MultiValueMap;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 /**
  * Implémentation réelle basée sur Twilio (SMS + WhatsApp Business API).
